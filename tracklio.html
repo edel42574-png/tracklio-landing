@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tracklio — Plataforma de seguimiento y control técnico para mantenimiento de elevadores y escaleras eléctricas." />
+  <title>Tracklio — Field Service Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Geist', sans-serif;
+      background: #f0ede6;
+      color: #1a1a1a;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .tl-sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: #27292f;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .tl-logo {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .tl-logo-text {
+      font-size: 22px;
+      font-weight: 600;
+      color: #f5f3ef;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .tl-logo-dot {
+      width: 7px;
+      height: 7px;
+      background: #4caf82;
+      border-radius: 50%;
+      margin-bottom: 4px;
+      display: inline-block;
+    }
+    .tl-logo-sub {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #888;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+    .tl-nav { flex: 1; padding: 20px 12px; }
+    .tl-nav-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #555;
+      padding: 0 8px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+    .tl-nav-label:first-child { margin-top: 0; }
+    .tl-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: #bbb;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+    }
+    .tl-nav-item:hover { background: rgba(255,255,255,0.06); color: #e8e8e8; }
+    .tl-nav-item.active { background: rgba(255,255,255,0.1); color: #f0ede6; }
+    .tl-nav-icon { font-size: 16px; width: 18px; text-align: center; }
+
+    /* ── MAIN ── */
+    .tl-main { flex: 1; padding: 36px 40px 60px; max-width: 960px; }
+
+    /* Hero */
+    .tl-hero { margin-bottom: 40px; }
+    .tl-hero-eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #777; margin-bottom: 10px; }
+    .tl-hero-title { font-size: 32px; font-weight: 600; color: #1a1a1a; line-height: 1.2; letter-spacing: -0.8px; margin-bottom: 12px; }
+    .tl-hero-title span { color: #1a7a52; }
+    .tl-hero-desc { font-size: 15px; color: #666; max-width: 500px; line-height: 1.65; }
+
+    /* Stats */
+    .tl-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 36px; }
+    .tl-stat-card { background: #fff; border-radius: 12px; padding: 16px 18px; border: 0.5px solid rgba(0,0,0,0.07); }
+    .tl-stat-label { font-size: 12px; color: #888; margin-bottom: 8px; }
+    .tl-stat-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; float: right; margin-top: -2px; }
+    .tl-stat-icon.blue { background: #e6f1fb; color: #2979c4; }
+    .tl-stat-icon.teal { background: #e1f5ee; color: #0f6e56; }
+    .tl-stat-icon.orange { background: #fdf0e3; color: #c2621b; }
+    .tl-stat-icon.red { background: #fceaea; color: #b94040; }
+    .tl-stat-num { font-size: 26px; font-weight: 600; color: #1a1a1a; clear: both; }
+
+    /* Section title */
+    .tl-section-title { font-size: 13px; font-weight: 500; color: #444; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+
+    /* Features */
+    .tl-features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    .tl-feature-card { background: #fff; border-radius: 14px; padding: 22px 24px; border: 0.5px solid rgba(0,0,0,0.07); transition: border-color 0.2s; }
+    .tl-feature-card:hover { border-color: rgba(0,0,0,0.18); }
+    .tl-feature-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+    .tl-feature-icon-wrap { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .bg-teal  { background: #e1f5ee; color: #0f6e56; }
+    .bg-blue  { background: #e6f1fb; color: #185fa5; }
+    .bg-amber { background: #faeeda; color: #854f0b; }
+    .bg-purple{ background: #eeedfe; color: #534ab7; }
+    .bg-coral { background: #faece7; color: #993c1d; }
+    .bg-green { background: #eaf3de; color: #3b6d11; }
+    .tl-feature-name { font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; }
+    .tl-feature-sub  { font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 0.8px; }
+    .tl-feature-desc { font-size: 13.5px; color: #666; line-height: 1.6; margin-bottom: 14px; }
+    .tl-feature-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tl-pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 0.5px solid rgba(0,0,0,0.12); color: #666; background: #f5f3ef; }
+
+    /* Wide card */
+    .tl-wide-card { background: #fff; border-radius: 14px; padding: 22px 24px; border: 0.5px solid rgba(0,0,0,0.07); margin-bottom: 16px; display: flex; gap: 24px; align-items: flex-start; }
+    .tl-wide-body { flex: 1; }
+    .tl-wide-visual { width: 180px; flex-shrink: 0; background: #f5f3ef; border-radius: 10px; padding: 14px; }
+    .tl-route-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12.5px; color: #555; border-bottom: 0.5px solid rgba(0,0,0,0.06); }
+    .tl-route-item:last-child { border-bottom: none; }
+    .tl-route-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Divider */
+    .tl-divider { height: 1px; background: rgba(0,0,0,0.07); margin: 32px 0; }
+
+    /* Workflow */
+    .tl-workflow { display: flex; margin-bottom: 32px; background: #fff; border-radius: 14px; border: 0.5px solid rgba(0,0,0,0.07); overflow: hidden; }
+    .tl-step { flex: 1; padding: 20px 18px; border-right: 0.5px solid rgba(0,0,0,0.07); position: relative; }
+    .tl-step:last-child { border-right: none; }
+    .tl-step-num  { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
+    .tl-step-icon { font-size: 22px; margin-bottom: 8px; }
+    .tl-step-name { font-size: 13.5px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; }
+    .tl-step-desc { font-size: 12px; color: #888; line-height: 1.5; }
+    .tl-arrow { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; background: #f0ede6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; z-index: 1; border: 0.5px solid rgba(0,0,0,0.1); }
+
+    /* CTA */
+    .tl-cta { background: #27292f; border-radius: 14px; padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .tl-cta-title { font-size: 18px; font-weight: 500; color: #f0ede6; margin-bottom: 6px; }
+    .tl-cta-desc  { font-size: 13px; color: #999; }
+    .tl-btn { background: #4caf82; color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-size: 13.5px; font-weight: 500; cursor: pointer; font-family: 'Geist', sans-serif; transition: background 0.15s; text-decoration: none; display: inline-block; }
+    .tl-btn:hover { background: #3d9b71; }
+
+    /* Pricing */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .pricing-card { background: #fff; border-radius: 14px; padding: 24px; border: 0.5px solid rgba(0,0,0,0.07); display: flex; flex-direction: column; transition: border-color 0.2s; }
+    .pricing-card:hover { border-color: rgba(0,0,0,0.15); }
+    .pricing-card.featured { border: 2px solid #1a7a52; }
+    .pricing-badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #e1f5ee; color: #0f6e56; margin-bottom: 12px; font-weight: 500; }
+    .pricing-name  { font-size: 16px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; }
+    .pricing-desc  { font-size: 12.5px; color: #888; margin-bottom: 20px; line-height: 1.5; }
+    .pricing-price { font-size: 30px; font-weight: 600; color: #1a1a1a; letter-spacing: -1px; margin-bottom: 2px; }
+    .pricing-price sup { font-size: 16px; font-weight: 400; vertical-align: super; letter-spacing: 0; }
+    .pricing-period  { font-size: 12px; color: #aaa; margin-bottom: 20px; }
+    .pricing-divider { height: 0.5px; background: rgba(0,0,0,0.07); margin: 0 0 16px; }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 9px; flex: 1; margin-bottom: 20px; }
+    .pricing-features li { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #555; }
+    .pricing-features li i { font-size: 15px; flex-shrink: 0; }
+    .pricing-features li.off { color: #bbb; }
+    .pricing-features li.off i { color: #ddd; }
+    .pricing-btn { display: block; width: 100%; padding: 9px 0; border-radius: 8px; font-size: 13.5px; font-weight: 500; text-align: center; cursor: pointer; border: 0.5px solid rgba(0,0,0,0.18); background: #f5f3ef; color: #444; font-family: 'Geist', sans-serif; transition: background 0.15s; text-decoration: none; }
+    .pricing-btn:hover { background: #e8e5de; }
+    .pricing-btn.primary { background: #4caf82; color: #fff; border-color: #4caf82; }
+    .pricing-btn.primary:hover { background: #3d9b71; }
+    .pricing-note { font-size: 12px; color: #aaa; text-align: center; margin-bottom: 32px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      .tl-sidebar { width: 100%; height: auto; position: relative; }
+      .tl-nav { display: flex; flex-wrap: wrap; gap: 4px; padding: 12px; }
+      .tl-nav-label { display: none; }
+      .tl-nav-item { font-size: 12px; padding: 6px 10px; }
+      .tl-main { padding: 24px 20px 40px; }
+      .tl-stats { grid-template-columns: 1fr 1fr; }
+      .tl-features-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .tl-wide-card { flex-direction: column; }
+      .tl-wide-visual { width: 100%; }
+      .tl-workflow { flex-direction: column; }
+      .tl-step { border-right: none; border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+      .tl-step:last-child { border-bottom: none; }
+      .tl-arrow { display: none; }
+      .tl-cta { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar">
+    <div class="tl-logo">
+      <div class="tl-logo-text">Tracklio<span class="tl-logo-dot"></span></div>
+      <div class="tl-logo-sub">Field Service</div>
+    </div>
+    <nav class="tl-nav">
+      <div class="tl-nav-label">Principal</div>
+      <a class="tl-nav-item active" href="#dashboard"><i class="ti ti-layout-dashboard tl-nav-icon"></i> Dashboard</a>
+      <a class="tl-nav-item" href="#mapa"><i class="ti ti-map tl-nav-icon"></i> Mapa</a>
+      <a class="tl-nav-item" href="#calendario"><i class="ti ti-calendar tl-nav-icon"></i> Calendario</a>
+      <a class="tl-nav-item" href="#servicios"><i class="ti ti-clipboard-list tl-nav-icon"></i> Servicios</a>
+      <a class="tl-nav-item" href="#reportes"><i class="ti ti-file-description tl-nav-icon"></i> Reportes</a>
+      <a class="tl-nav-item" href="#equipos"><i class="ti ti-tool tl-nav-icon"></i> Equipos</a>
+      <a class="tl-nav-item" href="#clientes"><i class="ti ti-building-store tl-nav-icon"></i> Clientes</a>
+      <a class="tl-nav-item" href="#plantillas"><i class="ti ti-template tl-nav-icon"></i> Plantillas</a>
+      <div class="tl-nav-label">Sistema</div>
+      <a class="tl-nav-item" href="#config"><i class="ti ti-settings tl-nav-icon"></i> Configuración</a>
+      <div class="tl-nav-label">Costos</div>
+      <a class="tl-nav-item" href="#costos"><i class="ti ti-receipt tl-nav-icon"></i> Planes y precios</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="tl-main">
+
+    <!-- Hero -->
+    <div class="tl-hero" id="dashboard">
+      <div class="tl-hero-eyebrow">Plataforma de Field Service</div>
+      <h1 class="tl-hero-title">Gestión técnica de elevadores<br><span>sin fricción.</span></h1>
+      <p class="tl-hero-desc">Tracklio centraliza el seguimiento, mantenimiento y control de elevadores y escaleras eléctricas. Todo en un solo lugar, en tiempo real.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="tl-stats">
+      <div class="tl-stat-card">
+        <div class="tl-stat-label">Clientes activos</div>
+        <div class="tl-stat-icon blue"><i class="ti ti-building"></i></div>
+        <div class="tl-stat-num">∞</div>
+      </div>
+      <div class="tl-stat-card">
+        <div class="tl-stat-label">Equipos operativos</div>
+        <div class="tl-stat-icon teal"><i class="ti ti-tool"></i></div>
+        <div class="tl-stat-num">∞</div>
+      </div>
+      <div class="tl-stat-card">
+        <div class="tl-stat-label">Servicios al mes</div>
+        <div class="tl-stat-icon orange"><i class="ti ti-file-check"></i></div>
+        <div class="tl-stat-num">∞</div>
+      </div>
+      <div class="tl-stat-card">
+        <div class="tl-stat-label">Alertas activas</div>
+        <div class="tl-stat-icon red"><i class="ti ti-alert-triangle"></i></div>
+        <div class="tl-stat-num">0</div>
+      </div>
+    </div>
+
+    <!-- Funciones -->
+    <div class="tl-section-title" id="servicios">Funciones principales</div>
+    <div class="tl-features-grid">
+
+      <div class="tl-feature-card">
+        <div class="tl-feature-header">
+          <div class="tl-feature-icon-wrap bg-teal"><i class="ti ti-clipboard-list"></i></div>
+          <div><div class="tl-feature-name">Gestión de Servicios</div><div class="tl-feature-sub">Operaciones</div></div>
+        </div>
+        <p class="tl-feature-desc">Crea, asigna y da seguimiento a órdenes de servicio de mantenimiento preventivo y correctivo. Controla el estado en tiempo real desde la apertura hasta el cierre.</p>
+        <div class="tl-feature-pills"><span class="tl-pill">Órdenes de trabajo</span><span class="tl-pill">Estados y prioridades</span><span class="tl-pill">Asignación de técnicos</span></div>
+      </div>
+
+      <div class="tl-feature-card">
+        <div class="tl-feature-header">
+          <div class="tl-feature-icon-wrap bg-blue"><i class="ti ti-tool"></i></div>
+          <div><div class="tl-feature-name">Registro de Equipos</div><div class="tl-feature-sub">Inventario técnico</div></div>
+        </div>
+        <p class="tl-feature-desc">Mantén el historial completo de cada elevador o escalera eléctrica: marca, modelo, número de serie, ubicación y fecha de última intervención técnica.</p>
+        <div class="tl-feature-pills"><span class="tl-pill">Ficha técnica</span><span class="tl-pill">Historial de servicios</span><span class="tl-pill">Alertas de vencimiento</span></div>
+      </div>
+
+      <div class="tl-feature-card">
+        <div class="tl-feature-header">
+          <div class="tl-feature-icon-wrap bg-purple"><i class="ti ti-building-store"></i></div>
+          <div><div class="tl-feature-name">Gestión de Clientes</div><div class="tl-feature-sub">CRM técnico</div></div>
+        </div>
+        <p class="tl-feature-desc">Administra tu cartera de clientes con todos sus datos de contacto, equipos asociados y el historial completo de intervenciones realizadas en sus instalaciones.</p>
+        <div class="tl-feature-pills"><span class="tl-pill">Datos de contacto</span><span class="tl-pill">Equipos por cliente</span><span class="tl-pill">Historial completo</span></div>
+      </div>
+
+      <div class="tl-feature-card">
+        <div class="tl-feature-header">
+          <div class="tl-feature-icon-wrap bg-amber"><i class="ti ti-file-description"></i></div>
+          <div><div class="tl-feature-name">Reportes Técnicos</div><div class="tl-feature-sub">Documentación</div></div>
+        </div>
+        <p class="tl-feature-desc">Genera reportes de servicio completos con diagnósticos, trabajos realizados, repuestos utilizados y firma del técnico. Exporta en PDF para el cliente.</p>
+        <div class="tl-feature-pills"><span class="tl-pill">Exportar PDF</span><span class="tl-pill">Firma digital</span><span class="tl-pill">Fotografías adjuntas</span></div>
+      </div>
+
+      <div class="tl-feature-card" id="calendario">
+        <div class="tl-feature-header">
+          <div class="tl-feature-icon-wrap bg-coral"><i class="ti ti-calendar"></i></div>
+          <div><div class="tl-feature-name">Calendario de Servicios</div><div class="tl-feature-sub">Planificación</div></div>
+        </div>
+        <p class="tl-feature-desc">Visualiza y planifica todos los servicios programados en un calendario interactivo. Anticipa los mantenimientos preventivos y evita retrasos en las visitas técnicas.</p>
+        <div class="tl-feature-pills"><span class="tl-pill">Vista mensual / semanal</span><span class="tl-pill">Mantenimiento preventivo</span><span class="tl-pill">Recordatorios</span></div>
+      </div>
+
+      <div class="tl-feature-card" id="plantillas">
+        <div class="tl-feature-header">
+          <div class="tl-feature-icon-wrap bg-green"><i class="ti ti-template"></i></div>
+          <div><div class="tl-feature-name">Plantillas de Inspección</div><div class="tl-feature-sub">Estandarización</div></div>
+        </div>
+        <p class="tl-feature-desc">Crea plantillas personalizadas de checklists para cada tipo de equipo y servicio. Estandariza el proceso de inspección y asegura que ningún punto quede sin revisar.</p>
+        <div class="tl-feature-pills"><span class="tl-pill">Checklists personalizados</span><span class="tl-pill">Por tipo de equipo</span><span class="tl-pill">Reutilizables</span></div>
+      </div>
+
+    </div>
+
+    <!-- Mapa -->
+    <div class="tl-section-title" id="mapa">Mapa en tiempo real</div>
+    <div class="tl-wide-card">
+      <div class="tl-wide-body">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <div class="tl-feature-icon-wrap bg-blue" style="width:40px;height:40px;"><i class="ti ti-map"></i></div>
+          <div><div class="tl-feature-name">Vista de mapa</div><div class="tl-feature-sub">Tiempo real</div></div>
+        </div>
+        <p class="tl-feature-desc" style="margin-bottom:12px;">Visualiza en un mapa interactivo la ubicación exacta de todos tus equipos instalados. Identifica rápidamente qué equipos tienen alertas activas o servicios próximos, y optimiza las rutas de tus técnicos.</p>
+        <div class="tl-feature-pills">
+          <span class="tl-pill">Ubicación de equipos</span>
+          <span class="tl-pill">Clusters por zona</span>
+          <span class="tl-pill">Estado en mapa</span>
+          <span class="tl-pill">Ruta optimizada</span>
+        </div>
+      </div>
+      <div class="tl-wide-visual">
+        <div style="font-size:11px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Equipos por zona</div>
+        <div class="tl-route-item"><div class="tl-route-dot" style="background:#4caf82;"></div><span>Zona Norte — Operativo</span></div>
+        <div class="tl-route-item"><div class="tl-route-dot" style="background:#4caf82;"></div><span>Zona Centro — Operativo</span></div>
+        <div class="tl-route-item"><div class="tl-route-dot" style="background:#e88c3a;"></div><span>Zona Sur — En servicio</span></div>
+        <div class="tl-route-item"><div class="tl-route-dot" style="background:#e24b4a;"></div><span>Zona Este — Alerta</span></div>
+      </div>
+    </div>
+
+    <div class="tl-divider"></div>
+
+    <!-- Workflow -->
+    <div class="tl-section-title">Flujo de trabajo</div>
+    <div class="tl-workflow">
+      <div class="tl-step">
+        <div class="tl-step-num">Paso 01</div>
+        <div class="tl-step-icon"><i class="ti ti-user-plus" style="color:#185fa5;"></i></div>
+        <div class="tl-step-name">Registra el cliente</div>
+        <div class="tl-step-desc">Da de alta al cliente y sus equipos con toda la información técnica relevante.</div>
+        <div class="tl-arrow">›</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-step-num">Paso 02</div>
+        <div class="tl-step-icon"><i class="ti ti-calendar-plus" style="color:#0f6e56;"></i></div>
+        <div class="tl-step-name">Programa el servicio</div>
+        <div class="tl-step-desc">Agenda la visita en el calendario y asigna al técnico responsable.</div>
+        <div class="tl-arrow">›</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-step-num">Paso 03</div>
+        <div class="tl-step-icon"><i class="ti ti-checklist" style="color:#854f0b;"></i></div>
+        <div class="tl-step-name">Ejecuta la inspección</div>
+        <div class="tl-step-desc">El técnico completa la plantilla de checklist durante la visita en campo.</div>
+        <div class="tl-arrow">›</div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-step-num">Paso 04</div>
+        <div class="tl-step-icon"><i class="ti ti-file-export" style="color:#993c1d;"></i></div>
+        <div class="tl-step-name">Genera el reporte</div>
+        <div class="tl-step-desc">Exporta el reporte en PDF con firma digital y envíalo al cliente.</div>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="tl-divider" id="costos"></div>
+    <div class="tl-section-title">
+      Planes y costos mensuales
+      <span style="font-size:12px;color:#1a7a52;font-weight:400;">Precios de ejemplo — sujetos a cambio</span>
+    </div>
+
+    <div class="pricing-grid">
+
+      <div class="pricing-card">
+        <div class="pricing-name">Starter</div>
+        <div class="pricing-desc">Para técnicos independientes que quieren digitalizar su operación.</div>
+        <div class="pricing-price"><sup>$</sup>299</div>
+        <div class="pricing-period">MXN / mes · 1 usuario</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Hasta 30 equipos</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Servicios ilimitados</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Reportes en PDF</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Calendario básico</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> 3 plantillas de inspección</li>
+          <li class="off"><i class="ti ti-x"></i> Vista de mapa</li>
+          <li class="off"><i class="ti ti-x"></i> Múltiples técnicos</li>
+          <li class="off"><i class="ti ti-x"></i> Reportes avanzados</li>
+        </ul>
+        <a href="https://eleva-platform.vercel.app" class="pricing-btn" target="_blank">Empezar gratis 14 días</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-badge"><i class="ti ti-star" style="font-size:11px;"></i> Más popular</div>
+        <div class="pricing-name">Profesional</div>
+        <div class="pricing-desc">Para empresas con equipo técnico propio y cartera de clientes activa.</div>
+        <div class="pricing-price"><sup>$</sup>799</div>
+        <div class="pricing-period">MXN / mes · hasta 5 usuarios</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Equipos ilimitados</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Servicios ilimitados</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Reportes PDF + firma digital</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Calendario avanzado</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Plantillas ilimitadas</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Vista de mapa en tiempo real</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Múltiples técnicos</li>
+          <li class="off"><i class="ti ti-x"></i> API + integraciones</li>
+        </ul>
+        <a href="https://eleva-platform.vercel.app" class="pricing-btn primary" target="_blank">Comenzar ahora →</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-name">Enterprise</div>
+        <div class="pricing-desc">Para compañías con múltiples sucursales, flotas grandes o requerimientos especiales.</div>
+        <div class="pricing-price" style="font-size:22px;letter-spacing:-0.5px;padding-top:6px;">A medida</div>
+        <div class="pricing-period">Cotización personalizada</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Todo lo de Profesional</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Usuarios ilimitados</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> API + integraciones</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Soporte prioritario 24/7</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Onboarding dedicado</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> SLA garantizado</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Reportes personalizados</li>
+          <li><i class="ti ti-check" style="color:#4caf82;"></i> Dominio propio (white-label)</li>
+        </ul>
+        <a href="mailto:ventas@tracklio.mx" class="pricing-btn" target="_blank">Contactar ventas →</a>
+      </div>
+
+    </div>
+
+    <div class="pricing-note">Todos los planes incluyen soporte por correo · Sin contratos de permanencia · Cancela cuando quieras</div>
+
+    <!-- CTA -->
+    <div class="tl-cta">
+      <div>
+        <div class="tl-cta-title">¿Listo para poner tu operación en orden?</div>
+        <div class="tl-cta-desc">Accede a la plataforma y empieza a gestionar tus equipos hoy mismo.</div>
+      </div>
+      <a href="https://eleva-platform.vercel.app" class="tl-btn" target="_blank">Abrir Tracklio →</a>
+    </div>
+
+  </main>
+
+  <script>
+    const navItems = document.querySelectorAll('.tl-nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        navItems.forEach(n => n.classList.remove('active'));
+        this.classList.add('active');
+        const targetId = this.getAttribute('href').replace('#', '');
+        const el = document.getElementById(targetId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+</body>
+</html>
